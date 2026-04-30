@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
 
 const Body = () => {
+  const [search, setSearch] = useState("");
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(0);
   const offset = page * 20;
@@ -18,16 +19,28 @@ const Body = () => {
       console.log(error);
     }
   };
+  const filteredPokemons = pokemons.filter((poke) =>
+    poke.name.toLowerCase().includes(search.toLowerCase()),
+  );
   useEffect(() => {
     fetchPokemon();
   }, [page]);
 
   return (
     <>
+      <div className="m-4 p-4 flex justify-center">
+        <input
+          className="w-64 px-10 py-2 border rounded-3xl"
+          type="text"
+          placeholder="Search pokemons"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <div className=" flex justify-center ">
-        <div className="flex flex-wrap gap-7 p-5">
-          {pokemons.map((poke) => {
-            return <PokemonCard poke={poke} />;
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-10 gap-5 p-5">
+          {filteredPokemons.map((poke) => {
+            return <PokemonCard key={poke.name} poke={poke} />;
           })}
         </div>
       </div>
