@@ -1,66 +1,53 @@
-<h1 align="center">⚡ Pokedex Lite</h1>
+# Pokedex Lite
 
-<p align="center">
-  A simple yet powerful Pokedex built using React & PokéAPI  
-</p>
+## Overview
 
-<p align="center">
-  🔍 Search &nbsp;•&nbsp; 🎯 Filter &nbsp;•&nbsp; ❤️ Favorites &nbsp;•&nbsp; 📄 Details &nbsp;•&nbsp; 📱 Responsive
-</p>
+This project is a simple Pokedex web application built using React and PokéAPI.
 
----
+The main goal of this assignment was to build a UI that can fetch Pokémon data from an API and allow users to search, filter, paginate, and view details. Along with that, I also implemented favorites and basic error handling.
 
-## 🚀 Overview
-
-This project is a Pokedex web app where users can explore Pokémon, search them by name, filter them by type, and view detailed stats.
-
-At first, it looked like a basic project, but while building it step by step, I realized how important it is to properly handle API data, manage multiple states, and structure components in a clean way.
+While building this, I focused more on understanding the flow of data and managing state properly rather than just making the UI look fancy.
 
 ---
 
-## ✨ Features
+## Features
 
-* 📡 Fetch Pokémon list from PokéAPI
-* 🔍 Search Pokémon by name
-* 🎯 Filter Pokémon by type
-* 📄 View detailed Pokémon info (HP, attack, abilities, image)
-* ❤️ Mark/unmark favorites (persisted using localStorage)
-* 📑 Pagination (Next / Previous)
-* ⏳ Loading & error handling
-* 📱 Fully responsive UI
-
----
-
-## 🛠️ Tech Stack
-
-<p>
-  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
-  <img src="https://img.shields.io/badge/TailwindCSS-0F172A?style=for-the-badge&logo=tailwind-css"/>
-  <img src="https://img.shields.io/badge/API-PokéAPI-green?style=for-the-badge"/>
-</p>
+* Fetch Pokémon list from PokéAPI
+* Search Pokémon by name
+* Filter Pokémon by type
+* Pagination (Next / Previous)
+* View Pokémon details in a modal (HP, attack, abilities, image)
+* Mark Pokémon as favorites
+* Favorites are stored in localStorage
+* Loading and error handling
+* Responsive layout
 
 ---
 
-## 📦 Project Setup
+## Tech Stack
+
+* React (Vite)
+* JavaScript
+* Tailwind CSS
+* PokéAPI
+
+---
+
+## Setup Instructions
 
 ```bash
-# Clone the repository
-git clone [<your-repo-link>](https://github.com/gptHarshit/pokemon-lite-project)
+git clone https://github.com/gptHarshit/pokemon-lite-project
 
-# Move into project
-cd pokedex-lite
+cd pokemon-lite-project
 
-# Install dependencies
 npm install
 
-# Run the app
 npm run dev
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -68,55 +55,54 @@ src/
  │    ├── PokemonCard.jsx
  │    ├── PokemonModal.jsx
  │
- ├── Body.jsx        # main logic (state, API, filtering)
+ ├── Body.jsx
  ├── App.jsx
 ```
 
 ---
 
-## ⚡ Challenges I Faced
+## How it Works
 
-### 🔹 Understanding API flow
-
-Initially, I thought all Pokémon data would come from one API call.
-But the list API only gives name + URL.
-
-To get stats, types, and abilities, I had to make another API call for each Pokémon.
-This helped me understand how APIs are often layered.
-
----
-
-### 🔹 Handling images
-
-The API didn’t directly provide images in the list response.
-
-I figured out that:
-
-* Pokémon ID can be extracted from the URL
-* That ID can be used to generate the image URL
-
-This was confusing at first but very useful to learn.
+* First, the Pokémon list is fetched using PokéAPI with pagination (offset + limit).
+* Each Pokémon only gives name and URL initially.
+* When needed, another API call is made using that URL to get full details like stats and types.
+* Search works by filtering the current list based on the input value.
+* Type filter works by checking each Pokémon’s type from the detailed API response.
+* Favorites are stored in localStorage so they remain even after refresh.
+* When a card is clicked, a modal opens and shows detailed data.
 
 ---
 
-### 🔹 Type filtering complexity
+## Challenges Faced
 
-Type was not available in the list API.
+### API understanding
 
-So I had to:
+At first, I thought everything would come from a single API call.
+But the list API only gives basic data, and for details, another API call is required.
 
-* fetch details of each Pokémon
-* then filter based on type
-
-This introduced multiple async calls and made the logic more complex.
+Understanding this flow took some time.
 
 ---
 
-### 🔹 Event bubbling issue
+### Image issue
 
-Clicking the favorite button was also opening the modal.
+Images were not directly available in the list response.
+I had to extract the Pokémon ID from the URL and use it to generate the image URL.
 
-I learned about event bubbling and fixed it using:
+---
+
+### Type filtering
+
+Filtering by type was not straightforward because type data is not available in the list API.
+I had to fetch details for each Pokémon and then filter them.
+
+---
+
+### Event handling issue
+
+When I added the favorite button, clicking it was also opening the modal.
+
+This happened due to event bubbling, and I fixed it using:
 
 ```js
 e.stopPropagation();
@@ -124,44 +110,34 @@ e.stopPropagation();
 
 ---
 
-### 🔹 Managing multiple states
+### State management
 
-Handling different states like:
-
-* Pokémon list
-* filtered list
-* selected Pokémon
-* details
-* favorites
-
-was tricky at first, but I improved the structure step by step.
+Managing multiple states like list, filtered data, selected Pokémon, and favorites was confusing at first, but it became clearer after structuring the logic properly.
 
 ---
 
-## 🧠 What I Learned
+## What I Learned
 
-* How to work with real-world APIs
-* Managing multiple states in React
-* Component separation (UI vs logic)
-* Event handling in nested elements
-* Using localStorage for persistence
-* Debugging and fixing real issues
+* How APIs actually work in real projects
+* Handling multiple API calls
+* Managing state in React
+* Component separation (Card and Modal)
+* Using localStorage
+* Debugging issues step by step
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
-* Improve UI/UX design
-* Add debounced search
+* Improve UI design
 * Optimize type filtering (reduce API calls)
-* Add infinite scrolling
+* Add better animations
+* Implement infinite scroll
 
 ---
 
-## 📌 Conclusion
+## Conclusion
 
-This project helped me go beyond basic React concepts.
+This project helped me understand how a real-world React application works.
 
-The biggest learning was:
-
-> Writing code is easy, but understanding the flow and handling real problems is what actually matters.
+It was not just about writing code, but about understanding how data flows and how different parts of the application are connected.
