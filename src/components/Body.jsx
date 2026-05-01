@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
+import PokemonModal from "./PokemonModal";
 
 const Body = () => {
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [typedPokemons, setTypedPokemons] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [pokemonDetails, setPokemonDetails] = useState(null);
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(0);
   const offset = page * 20;
@@ -34,6 +36,7 @@ const Body = () => {
       setTypedPokemons(filteredPokemons);
       return;
     }
+
     const filterByType = async () => {
       const result = [];
 
@@ -53,6 +56,19 @@ const Body = () => {
 
     filterByType();
   }, [selectedType, pokemons, search]);
+
+  useEffect(() => {
+    if (!selectedPokemon) return;
+
+    const fetchDetails = async () => {
+      const res = await fetch(selectedPokemon.url);
+      const data = await res.json();
+      console.log("data of poke : ", data);
+      setPokemonDetails(data);
+    };
+
+    fetchDetails();
+  }, [selectedPokemon]);
 
   return (
     <>
@@ -109,7 +125,13 @@ const Body = () => {
         </button>
       </div>
 
-      {selectedPokemon && <div>Modal here</div>}
+      {selectedPokemon && (
+        <PokemonModal
+          selectedPokemon={selectedPokemon}
+          pokemonDetails={pokemonDetails}
+          onClose={() => setSelectedPokemon(null)}
+        />
+      )}
     </>
   );
 };
