@@ -46,7 +46,7 @@ At first, it looked like a basic project, but while building it step by step, I 
 
 ```bash
 # Clone the repository
-git clone <your-repo-link>
+git clone [<your-repo-link>](https://github.com/gptHarshit/pokemon-lite-project)
 
 # Move into project
 cd pokedex-lite
