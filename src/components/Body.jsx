@@ -3,6 +3,9 @@ import PokemonCard from "./PokemonCard";
 
 const Body = () => {
   const [search, setSearch] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [typedPokemons, setTypedPokemons] = useState([]);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const [pokemons, setPokemons] = useState([]);
   const [page, setPage] = useState(0);
   const offset = page * 20;
@@ -26,9 +29,34 @@ const Body = () => {
     fetchPokemon();
   }, [page]);
 
+  useEffect(() => {
+    if (!selectedType) {
+      setTypedPokemons(filteredPokemons);
+      return;
+    }
+    const filterByType = async () => {
+      const result = [];
+
+      for (let p of filteredPokemons) {
+        const res = await fetch(p.url);
+        const data = await res.json();
+
+        const types = data.types.map((t) => t.type.name);
+
+        if (types.includes(selectedType)) {
+          result.push(p);
+        }
+      }
+
+      setTypedPokemons(result);
+    };
+
+    filterByType();
+  }, [selectedType, pokemons, search]);
+
   return (
     <>
-      <div className="m-4 p-4 flex justify-center">
+      <div className="m-2 p-4 flex justify-center">
         <input
           className="w-64 px-10 py-2 border rounded-3xl"
           type="text"
@@ -37,16 +65,36 @@ const Body = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+      <div className="flex justify-center gap-4 mt-2 mb-1">
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          className="border px-3 py-2 rounded"
+        >
+          <option value="">All Types</option>
+          <option value="fire">Fire</option>
+          <option value="water">Water</option>
+          <option value="grass">Grass</option>
+          <option value="electric">Electric</option>
+        </select>
+      </div>
       <div className=" flex justify-center ">
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-10 gap-5 p-5">
-          {filteredPokemons.map((poke) => {
-            return <PokemonCard key={poke.name} poke={poke} />;
+          {typedPokemons.map((poke) => {
+            return (
+              <PokemonCard
+                key={poke.name}
+                poke={poke}
+                onClick={() => setSelectedPokemon(poke)}
+              />
+            );
           })}
         </div>
       </div>
+
       <div className="flex justify-center gap-5 mt-4">
         <button
-          className="bg-blue-600 px-5 py-1 rounded-2xl border text-white"
+          className="bg-blue-600 px-5 py-1 rounded-2xl border text-white cursor-pointer"
           disabled={page === 0}
           onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
         >
@@ -54,12 +102,14 @@ const Body = () => {
         </button>
 
         <button
-          className="bg-blue-600 px-5 py-1 rounded-2xl border text-white"
+          className="bg-blue-600 px-5 py-1 rounded-2xl border text-white cursor-pointer"
           onClick={() => setPage((prev) => prev + 1)}
         >
           Next
         </button>
       </div>
+
+      {selectedPokemon && <div>Modal here</div>}
     </>
   );
 };

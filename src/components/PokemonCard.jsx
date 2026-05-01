@@ -1,11 +1,15 @@
 import React from "react";
 
-const PokemonCard = ({ poke }) => {
+const PokemonCard = ({ poke, onClick }) => {
   const { name, url } = poke;
   const parts = poke.url.split("/");
   const id = parts[parts.length - 2];
   return (
-    <div key={poke.name} className="border p-2 rounded-3xl flex flex-col">
+    <div
+      key={poke.name}
+      className="border p-2 rounded-3xl flex flex-col"
+      onClick={onClick}
+    >
       <h1 className="items-center justify-center">{poke.name}</h1>
       <img
         className="items-center justify-center"
