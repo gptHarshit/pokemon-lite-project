@@ -8,6 +8,8 @@ const Body = () => {
   const [typedPokemons, setTypedPokemons] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const [pokemonDetails, setPokemonDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [pokemons, setPokemons] = useState([]);
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem("favorites");
@@ -18,14 +20,21 @@ const Body = () => {
 
   const fetchPokemon = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`,
       );
+      if (!response.ok) {
+        throw new Error("Failed to fetch Pokémon");
+      }
       const Data = await response.json();
       setPokemons(Data.results);
       console.log(Data);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   const filteredPokemons = pokemons.filter((poke) =>
@@ -74,7 +83,10 @@ const Body = () => {
   }, [selectedType, pokemons, search]);
 
   useEffect(() => {
-    if (!selectedPokemon) return;
+    if (!selectedPokemon) {
+      setPokemonDetails(null);
+      return;
+    }
 
     const fetchDetails = async () => {
       const res = await fetch(selectedPokemon.url);
@@ -110,21 +122,27 @@ const Body = () => {
           <option value="electric">Electric</option>
         </select>
       </div>
-      <div className=" flex justify-center ">
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-10 gap-5 p-5">
-          {typedPokemons.map((poke) => {
-            return (
-              <PokemonCard
-                key={poke.name}
-                poke={poke}
-                onClick={() => setSelectedPokemon(poke)}
-                isFav={favorites.includes(poke.name)}
-                toggleFavorite={toggleFavorite}
-              />
-            );
-          })}
+      {loading && <p className="text-center mt-4">Loading...</p>}
+
+      {error && <p className="text-center mt-4 text-red-500">{error}</p>}
+
+      {!loading && !error && (
+        <div className=" flex justify-center ">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-10 gap-5 p-5">
+            {typedPokemons.map((poke) => {
+              return (
+                <PokemonCard
+                  key={poke.name}
+                  poke={poke}
+                  onClick={() => setSelectedPokemon(poke)}
+                  isFav={favorites.includes(poke.name)}
+                  toggleFavorite={toggleFavorite}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex justify-center gap-5 mt-4">
         <button
