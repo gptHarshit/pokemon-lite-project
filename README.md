@@ -88,13 +88,14 @@ Understanding this flow took some time.
 
 Images were not directly available in the list response.
 I had to extract the Pokémon ID from the URL and use it to generate the image URL.
+Understanding this part also takes my much time
 
 ---
 
 ### Type filtering
 
 Filtering by type was not straightforward because type data is not available in the list API.
-I had to fetch details for each Pokémon and then filter them.
+I had to fetch details for each Pokémon and then filter them.For this I have to refer proper documentatio of the PokeMonAPI
 
 ---
 
@@ -115,29 +116,3 @@ e.stopPropagation();
 Managing multiple states like list, filtered data, selected Pokémon, and favorites was confusing at first, but it became clearer after structuring the logic properly.
 
 ---
-
-## What I Learned
-
-* How APIs actually work in real projects
-* Handling multiple API calls
-* Managing state in React
-* Component separation (Card and Modal)
-* Using localStorage
-* Debugging issues step by step
-
----
-
-## Future Improvements
-
-* Improve UI design
-* Optimize type filtering (reduce API calls)
-* Add better animations
-* Implement infinite scroll
-
----
-
-## Conclusion
-
-This project helped me understand how a real-world React application works.
-
-It was not just about writing code, but about understanding how data flows and how different parts of the application are connected.
