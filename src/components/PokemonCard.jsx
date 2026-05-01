@@ -1,23 +1,29 @@
-import React from "react";
-
-const PokemonCard = ({ poke, onClick }) => {
-  const { name, url } = poke;
+const PokemonCard = ({ poke, onClick, isFav, toggleFavorite }) => {
   const parts = poke.url.split("/");
   const id = parts[parts.length - 2];
+
   return (
     <div
-      key={poke.name}
-      className="border p-2 rounded-3xl flex flex-col"
+      className="border p-2 rounded-3xl flex flex-col items-center"
       onClick={onClick}
     >
-      <h1 className="items-center justify-center">{poke.name}</h1>
+      <h1>{poke.name}</h1>
+
       <img
-        className="items-center justify-center"
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         alt={poke.name}
       />
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(poke.name);
+        }}
+      >
+        {isFav ? "❤️" : "🤍"}
+      </button>
     </div>
   );
 };
+
 
 export default PokemonCard;

@@ -9,6 +9,10 @@ const Body = () => {
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const [pokemonDetails, setPokemonDetails] = useState(null);
   const [pokemons, setPokemons] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const stored = localStorage.getItem("favorites");
+    return stored ? JSON.parse(stored) : [];
+  });
   const [page, setPage] = useState(0);
   const offset = page * 20;
 
@@ -27,6 +31,18 @@ const Body = () => {
   const filteredPokemons = pokemons.filter((poke) =>
     poke.name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const toggleFavorite = (name) => {
+    let updated;
+    if (favorites.includes(name)) {
+      updated = favorites.filter((fav) => fav !== name);
+    } else {
+      updated = [...favorites, name];
+    }
+    setFavorites(updated);
+    localStorage.setItem("favorites", JSON.stringify(updated));
+  };
+
   useEffect(() => {
     fetchPokemon();
   }, [page]);
@@ -102,6 +118,8 @@ const Body = () => {
                 key={poke.name}
                 poke={poke}
                 onClick={() => setSelectedPokemon(poke)}
+                isFav={favorites.includes(poke.name)}
+                toggleFavorite={toggleFavorite}
               />
             );
           })}
@@ -130,6 +148,8 @@ const Body = () => {
           selectedPokemon={selectedPokemon}
           pokemonDetails={pokemonDetails}
           onClose={() => setSelectedPokemon(null)}
+          isFav={favorites.includes(pokemonDetails?.name)}
+          toggleFavorite={toggleFavorite}
         />
       )}
     </>
